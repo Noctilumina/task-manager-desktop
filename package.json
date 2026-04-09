@@ -1,0 +1,26 @@
+{
+  "name": "@noctilumina/task-manager-desktop",
+  "version": "0.1.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "concurrently \"tsc -w\" \"wait-on dist/main.js && electron dist/main.js\"",
+    "build": "tsc",
+    "test": "playwright test",
+    "start": "electron dist/main.js"
+  },
+  "dependencies": {
+    "@noctilumina/task-manager-shared": "^0.1.0",
+    "firebase": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "concurrently": "^8.0.0",
+    "electron": "^29.0.0",
+    "typescript": "^5.0.0",
+    "wait-on": "^7.0.0"
+  }
+}
