@@ -78,8 +78,12 @@ ipcMain.handle('google-auth', async () => {
   popup.loadURL(authUrl.toString());
 
   return new Promise<string>((resolve, reject) => {
-    const tryCapture = async (_e: Electron.Event, url: string) => {
-      if (!url.startsWith(redirectUri)) return;
+    let captured = false;
+
+    const tryCapture = async (e: Electron.Event, url: string) => {
+      if (!url.startsWith(redirectUri) || captured) return;
+      e.preventDefault(); // stop popup loading our app and corrupting Firebase state
+      captured = true;
       const code = new URL(url).searchParams.get('code');
       if (!code) { reject(new Error('No auth code')); return; }
       popup.destroy();
@@ -95,7 +99,7 @@ ipcMain.handle('google-auth', async () => {
 
     popup.webContents.on('will-redirect', tryCapture);
     popup.webContents.on('will-navigate', tryCapture);
-    popup.on('closed', () => reject(new Error('cancelled')));
+    popup.on('closed', () => { if (!captured) reject(new Error('cancelled')); });
   });
 });
 
