@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = 21342;
+const PORT = 5000;
 const MIME: Record<string, string> = {
   '.html': 'text/html',
   '.js':   'application/javascript',
