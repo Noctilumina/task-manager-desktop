@@ -8,6 +8,7 @@ interface ElectronAPI {
     messagingSenderId: string;
     appId: string;
   };
+  startGoogleAuth: () => Promise<string>;
 }
 
 declare interface Window {

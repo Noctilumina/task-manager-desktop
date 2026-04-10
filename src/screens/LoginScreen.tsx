@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 
 export function LoginScreen() {
   const [loading, setLoading] = useState(false);
@@ -10,11 +9,12 @@ export function LoginScreen() {
     setLoading(true);
     setError(null);
     try {
-      const auth = getAuth();
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch {
-      setError('Sign-in failed. Please try again.');
+      const idToken = await window.electronAPI.startGoogleAuth();
+      const credential = GoogleAuthProvider.credential(idToken);
+      await signInWithCredential(getAuth(), credential);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : '';
+      if (msg !== 'cancelled') setError('Sign-in failed. Please try again.');
     } finally {
       setLoading(false);
     }

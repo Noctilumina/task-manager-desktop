@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID ?? '',
     appId: process.env.FIREBASE_APP_ID ?? '',
   },
+  startGoogleAuth: () => ipcRenderer.invoke('google-auth'),
 });
