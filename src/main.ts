@@ -59,7 +59,7 @@ ipcMain.handle('google-auth', async () => {
   const verifier = base64url(crypto.randomBytes(32));
   const challenge = base64url(crypto.createHash('sha256').update(verifier).digest());
   const clientId = process.env.GOOGLE_WEB_CLIENT_ID ?? '';
-  const redirectUri = `http://localhost:${PORT}/auth-callback`;
+  const redirectUri = `http://localhost:${PORT}`;
 
   const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
   authUrl.searchParams.set('client_id', clientId);
