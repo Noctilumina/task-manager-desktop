@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
+import { initializeApp, getApps } from 'firebase/app';
 import { TaskService, FirebaseTaskRepository, SyncService, type Task, type SortBy, type SyncStatus } from '@noctilumina/task-manager-shared';
 
 export function TaskListScreen({ userId }: { userId: string }) {
-  const [service] = useState(() => new TaskService(new FirebaseTaskRepository()));
+  const [service] = useState(() => {
+    console.log('[TaskList] apps at mount:', getApps().length);
+    if (!getApps().length) {
+      console.warn('[TaskList] Firebase not initialized — reinitializing');
+      initializeApp(window.electronAPI.firebaseConfig);
+    }
+    return new TaskService(new FirebaseTaskRepository());
+  });
   const [syncService] = useState(() => { const repo = new FirebaseTaskRepository(); return new SyncService(repo, repo); });
   const [tasks, setTasks] = useState<Task[]>([]);
   const [sortBy, setSortBy] = useState<SortBy>('dueDate');
