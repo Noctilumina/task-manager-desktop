@@ -26,7 +26,7 @@ function startServer(root: string): Promise<void> {
         res.end(data);
       });
     });
-    server.listen(PORT, '127.0.0.1', () => resolve());
+    server.listen(PORT, 'localhost', () => resolve());
     server.on('error', reject);
   });
 }
@@ -61,7 +61,8 @@ async function createWindow() {
     return { action: 'deny' };
   });
 
-  win.loadURL(`http://127.0.0.1:${PORT}`);
+  win.webContents.openDevTools({ mode: 'bottom' });
+  win.loadURL(`http://localhost:${PORT}`);
 }
 
 app.whenReady().then(() => {
