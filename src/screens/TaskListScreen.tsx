@@ -2,11 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import { TaskService, FirebaseTaskRepository, SyncService, type Task, type SortBy, type SyncStatus } from '@noctilumina/task-manager-shared';
 
-const service = new TaskService(new FirebaseTaskRepository());
-const repo = new FirebaseTaskRepository();
-const syncService = new SyncService(repo, repo);
-
 export function TaskListScreen({ userId }: { userId: string }) {
+  const [service] = useState(() => new TaskService(new FirebaseTaskRepository()));
+  const [syncService] = useState(() => { const repo = new FirebaseTaskRepository(); return new SyncService(repo, repo); });
   const [tasks, setTasks] = useState<Task[]>([]);
   const [sortBy, setSortBy] = useState<SortBy>('dueDate');
   const [newTitle, setNewTitle] = useState('');
