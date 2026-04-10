@@ -85,8 +85,8 @@ ipcMain.handle('google-auth', async () => {
       popup.destroy();
       try {
         const tokens = await httpsPost('https://oauth2.googleapis.com/token', {
-          code, client_id: clientId, redirect_uri: redirectUri,
-          grant_type: 'authorization_code', code_verifier: verifier,
+          code, client_id: clientId, client_secret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+          redirect_uri: redirectUri, grant_type: 'authorization_code', code_verifier: verifier,
         });
         if (tokens.error) { reject(new Error(String(tokens.error_description ?? tokens.error))); return; }
         resolve(tokens.id_token);
