@@ -31,6 +31,7 @@ function createWindow() {
     return { action: 'deny' };
   });
 
+  win.webContents.openDevTools({ mode: 'bottom' });
   win.loadFile(path.join(__dirname, '../index.html'));
 }
 

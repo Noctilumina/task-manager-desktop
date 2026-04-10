@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc -p tsconfig.main.json && esbuild src/renderer.tsx --bundle --outfile=dist/renderer.js --platform=browser",
-    "dev": "concurrently \"tsc -p tsconfig.main.json -w\" \"esbuild src/renderer.tsx --bundle --outfile=dist/renderer.js --platform=browser --watch\" \"wait-on dist/main.js dist/renderer.js && electron dist/main.js\"",
+    "build": "tsc -p tsconfig.main.json && node build-renderer.js",
+    "dev": "concurrently \"tsc -p tsconfig.main.json -w\" \"node build-renderer.js --watch\" \"wait-on dist/main.js dist/renderer.js && electron dist/main.js\"",
     "test": "playwright test",
     "start": "electron dist/main.js"
   },
