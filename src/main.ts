@@ -1,10 +1,40 @@
 import { app, BrowserWindow, Menu } from 'electron';
+import http from 'http';
+import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-function createWindow() {
+const PORT = 21342;
+const MIME: Record<string, string> = {
+  '.html': 'text/html',
+  '.js':   'application/javascript',
+  '.css':  'text/css',
+  '.json': 'application/json',
+};
+
+function startServer(root: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      const urlPath = (req.url === '/' ? '/index.html' : req.url ?? '/index.html').split('?')[0];
+      const filePath = path.join(root, urlPath);
+      const contentType = MIME[path.extname(filePath).toLowerCase()] ?? 'application/octet-stream';
+      fs.readFile(filePath, (err, data) => {
+        if (err) { res.writeHead(404); res.end('Not found'); return; }
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(data);
+      });
+    });
+    server.listen(PORT, '127.0.0.1', () => resolve());
+    server.on('error', reject);
+  });
+}
+
+async function createWindow() {
+  const root = path.join(__dirname, '..');
+  await startServer(root);
+
   const win = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -31,8 +61,7 @@ function createWindow() {
     return { action: 'deny' };
   });
 
-  win.webContents.openDevTools({ mode: 'bottom' });
-  win.loadFile(path.join(__dirname, '../index.html'));
+  win.loadURL(`http://127.0.0.1:${PORT}`);
 }
 
 app.whenReady().then(() => {
